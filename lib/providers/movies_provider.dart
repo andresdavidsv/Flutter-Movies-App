@@ -19,9 +19,9 @@ class MoviesProvider extends ChangeNotifier {
     getPopularMovies();
   }
   Future<String> _getJsonData(String endpoint, [int page = 1]) async {
-    var url = Uri.https(_baseUrl, endpoint,
+    final url = Uri.https(_baseUrl, endpoint,
         {'api_key': _apikey, 'language': _language, 'page': '$page'});
-    var response = await http.get(url);
+    final response = await http.get(url);
     if (response.statusCode == 200) {
       return response.body;
     } else {
@@ -52,5 +52,19 @@ class MoviesProvider extends ChangeNotifier {
     final creditsResponse = CreditsResponse.fromRawJson(jsonData);
     moviesCast[movieId] = creditsResponse.cast;
     return creditsResponse.cast;
+  }
+
+  Future<Object> searchMovies(String query) async {
+    final url = Uri.https(_baseUrl, '3/search/movie',
+        {'api_key': _apikey, 'language': _language, 'query': query});
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      final searchResponse = SearchResponse.fromRawJson(response.body);
+      return searchResponse.results;
+    } else {
+      // ignore: avoid_print
+      print('Request failed with status: ${response.statusCode}.');
+      return response.statusCode;
+    }
   }
 }

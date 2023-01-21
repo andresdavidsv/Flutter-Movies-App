@@ -74,7 +74,11 @@ class _MoviePosterState extends State<_MoviePoster> {
         scrollDirection: Axis.horizontal,
         itemCount: widget.movies.length,
         itemBuilder: (context, index) {
-          return _MoviePosterSingle(movie: widget.movies[index]);
+          return _MoviePosterSingle(
+            movie: widget.movies[index],
+            heroId:
+                '${widget.movies[index].title}-$index-${widget.movies[index].id}}',
+          );
         },
       ),
     );
@@ -83,13 +87,16 @@ class _MoviePosterState extends State<_MoviePoster> {
 
 class _MoviePosterSingle extends StatelessWidget {
   final Movie movie;
+  final String heroId;
   const _MoviePosterSingle({
     Key? key,
     required this.movie,
+    required this.heroId,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    movie.heroId = heroId;
     return Container(
       width: 130,
       height: 190,
@@ -100,14 +107,17 @@ class _MoviePosterSingle extends StatelessWidget {
             onTap: () {
               Navigator.pushNamed(context, 'details', arguments: movie);
             },
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: FadeInImage(
-                placeholder: const AssetImage('assets/no-image.jpg'),
-                image: NetworkImage(movie.fullPosterImg),
-                height: 190,
-                width: 130,
-                fit: BoxFit.cover,
+            child: Hero(
+              tag: movie.heroId!,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: FadeInImage(
+                  placeholder: const AssetImage('assets/no-image.jpg'),
+                  image: NetworkImage(movie.fullPosterImg),
+                  height: 190,
+                  width: 130,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),

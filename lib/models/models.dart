@@ -1,3 +1,5 @@
+export 'package:movies/models/search_response.dart';
+
 export 'package:movies/models/credits_response.dart';
 
 export 'package:movies/models/menu_option.dart';
